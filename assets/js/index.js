@@ -1,5 +1,5 @@
-const timeTitle = document.querySelector('#time__title');
-timeTitle.textContent = moment().format('LLL');
+// const timeTitle = document.querySelector('#time__title');
+// timeTitle.textContent = moment().format('LLL');
 
 
 window.onload = function() {
@@ -74,7 +74,18 @@ window.onload = function() {
             }, 3000);
         });
     });
+
+
     function fetchWeatherData(city) {
+
+            let apiCalls = 0;
+            let lastCallTime = Date.now();
+
+            if (apiCalls >= 60 && Date.now() - lastCallTime < 60000) {
+                alert('Too many requests. Please wait and try again.');
+                return;
+              }
+        
             // Create the API url with the city name
             const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=533db0fe660967a689d19e1ed590c056`;
             // Fetch the data from the API
@@ -90,6 +101,13 @@ window.onload = function() {
             .catch(function(error) {
                 console.log(error);
             });
+
+            apiCalls++;
+            lastCallTime = Date.now();
+        }
+
+        function updateAPICallInfo() {
+            document.getElementById("api-call-info").innerHTML = "API Calls: " + apiCalls + "<br> Last Call: " + lastCallTime;
         }
     // Function to add a city to the storage
     function addCityToHistory(city) {
