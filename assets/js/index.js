@@ -1,11 +1,5 @@
-// const timeTitle = document.querySelector('#time__title');
-// timeTitle.textContent = moment().format('LLL');
-
-
+// This is the main JavaScript file for the weather app
 window.onload = function() {
-    // Select the form element
-    // const form = document.querySelector('form');
-  
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             const lat = position.coords.latitude;
@@ -31,7 +25,7 @@ window.onload = function() {
         event.preventDefault();
         // Get the city name from the input field
         const cityName = document.querySelector('#city_name').value;
-        if (!cityName || cityName.trim() === '' || cityName.trim().length < 3 || cityName.trim().length > 20 || !cityName.match(/^[a-zA-Z]+$/)) {
+        if (cityName === '' || cityName === null || cityName === undefined) {
             // Show an alert to the user
             const alert = document.createElement('div');
             alert.classList.add('alert', 'alert-danger', 'mt-3');
@@ -65,13 +59,13 @@ window.onload = function() {
             console.log(error);
             // Show an alert to the user
             const alert = document.querySelector('.alert');
-            alert.textContent = 'Please enter a valid city name.';
+            alert.textContent = 'City Not Fund 404 (Not Found). Please enter a valid city name.';
             alert.classList.add('alert-danger');
             alert.style.display = 'block';
-            // Hide the alert after 3 seconds
+            // Hide the alert after 5 seconds
             setTimeout(function() {
             alert.style.display = 'none';
-            }, 3000);
+            }, 5000);
         });
     });
 
@@ -104,10 +98,6 @@ window.onload = function() {
 
             apiCalls++;
             lastCallTime = Date.now();
-        }
-
-        function updateAPICallInfo() {
-            document.getElementById("api-call-info").innerHTML = "API Calls: " + apiCalls + "<br> Last Call: " + lastCallTime;
         }
     // Function to add a city to the storage
     function addCityToHistory(city) {
