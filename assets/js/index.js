@@ -168,7 +168,7 @@ window.onload = function () {
     cityName.innerHTML += img;
     cityTemp.textContent = `Temp: ${Math.round(
       data.main.temp
-    )} C H: ${Math.round(data.main.temp_max)} C L: ${Math.round(
+    )} (Feels like: ${Math.round(data.main.feels_like)})     C High: ${Math.round(data.main.temp_max)} C Low: ${Math.round(
       data.main.temp_min
     )} C`;
     cityHumidity.textContent = `Humidity: ${data.main.humidity} %`;
