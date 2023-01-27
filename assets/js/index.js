@@ -4,13 +4,16 @@ window.onload = function() {
         navigator.geolocation.getCurrentPosition(function(position) {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            const apiUrl = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=533db0fe660967a689d19e1ed590c056`;
+            const apiUrl = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=533db0fe660967a689d19e1ed590c056`;
             fetch(apiUrl)
             .then(function(response) {
                 return response.json();
             })
             .then(function(data) {
                 displayData(data);
+                // call the function to display the forecast for the current city automatically
+                console.log(data);
+                displayForecast(data.name);
             })
             .catch(function(error) {
                 console.log(error);
@@ -36,14 +39,17 @@ window.onload = function() {
               }, 3000);
             return;
         } else {
+            // call the function to display the forecast for the current city automatically
 
+            displayForecast(cityName);
         }
+    
 
 
         // Add the city name to the storage
         addCityToHistory(cityName);
         // Create the API url with the city name
-        const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=533db0fe660967a689d19e1ed590c056`;
+        const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=533db0fe660967a689d19e1ed590c056`;
         // Fetch the data from the API
         fetch(apiUrl)
         .then(function(response) {
@@ -69,6 +75,39 @@ window.onload = function() {
         });
     });
 
+    // Function to display 5 days forecast
+    function displayForecast(city) {
+        // Create the API url with the city name
+        const apiUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=533db0fe660967a689d19e1ed590c056`;
+        // Fetch the data from the API
+        fetch(apiUrl)
+        .then(response => response.json())
+              .then(data => {
+                  // Get the 5-day forecast by filtering the data for only the 3-hour intervals
+                  var fiveDayForecast = data.list.filter(function(forecast) {
+                      return forecast.dt_txt.includes("12:00:00");
+                  });
+                  
+                  // Now you can loop through the 5-day forecast array and update the HTML template
+                  fiveDayForecast.forEach(function(forecast, index) {
+                      var forecastCard = document.querySelectorAll('.card')[index];
+                        // change the date order to be more readable 
+                      var date = new Date(forecast.dt * 1000);  
+                      forecastCard.querySelector('.card-title').textContent = moment(date).format('dddd, MMMM Do');    
+                      forecastCard.querySelector('.city__temp__forecast').textContent = `Temp: ${Math.round(forecast.main.temp)} C`;
+                      forecastCard.querySelector('.city__humidity__forecast').textContent = `Humidity: ${forecast.main.humidity} %`;
+                      forecastCard.querySelector('.city__wind__forecast').textContent = `Wind: ${forecast.wind.speed} m/s`;
+                      forecastCard.querySelector('img').src = `http://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`;
+                  });
+              })
+              .catch(error => {
+                  console.log(error);
+              });
+              
+    }
+    // call the function to display the forecast for the current city automatically
+    // displayForecast();
+
 
     function fetchWeatherData(city) {
 
@@ -79,9 +118,11 @@ window.onload = function() {
                 alert('Too many requests. Please wait and try again.');
                 return;
               }
+            
+              
         
             // Create the API url with the city name
-            const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=533db0fe660967a689d19e1ed590c056`;
+            const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=533db0fe660967a689d19e1ed590c056`;
             // Fetch the data from the API
             fetch(apiUrl)
             .then(function(response) {
@@ -115,6 +156,7 @@ window.onload = function() {
         // Update the history buttons
         updateHistoryButtons(cityHistory);
     }
+
 
    
       
@@ -150,26 +192,30 @@ window.onload = function() {
     // Function to display the data on the page
     function displayData(data) {
       // Select the elements where you want to display the data
+      const cityCloudDesc = document.querySelector('.city__cloud__desc');
       const cityName = document.querySelector('.city__name');
       const cityTemp = document.querySelector('.city__temp');
       const cityHumidity = document.querySelector('.city__humidity');
       const cityWind = document.querySelector('.city__wind');
+    
       
       
       // Update the elements with the data from the AP
       
       /* Setting the text content of the city name to the data.name. */
-      //   cityName.textContent = data.name;  
-      cityName.textContent = data.name + " " + moment().format('DD/MM/YYYY');
+      //   cityName.textContent = data.name;  moment(date).format('dddd, MMMM Do')
+      cityName.textContent = data.name + " " + moment().format('Do MMMM, dddd');
       const icon = data.weather[0].icon;
       const img = `<img src="http://openweathermap.org/img/wn/${icon}@2x.png">`;
+      cityCloudDesc.textContent = `Cloud Condition: ${data.weather[0].description}`;
       cityName.innerHTML += img;
       cityTemp.textContent = `  
-        Temp: ${data.main.temp} C`;
+        Temp: ${Math.round(data.main.temp)} C H: ${Math.round(data.main.temp_max)} C L: ${Math.round(data.main.temp_min)} C`;
       cityHumidity.textContent = `
-        Humidity: ${data.main.humidity}%`;
+        Humidity: ${data.main.humidity} %`;
       cityWind.textContent = `
         Wind: ${data.wind.speed} m/s`;
+         
     }
   }
   

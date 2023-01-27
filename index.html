@@ -34,19 +34,27 @@
             <hr class="hr weather-hr" />
             <h2 id="history">Previous searches:</h2>
             
+
+            
           </aside>
           <div class="col-lg-9 pb-3">
             <section id="today" class="mt-3 border border-primary p-2" role="region" aria-live="polite">
               <h3 class="city__name"></h3>
               <div class="row">
                 <div class="col-6">
+                  <p class="city__cloud__desc"></p>
                   <p class="city__temp"></p>
                   <p class="city__humidity"></p>
                   <p class="city__wind"></p>
                 </div>
             </section>
             <section id="forecast" class="mt-3" role="region" aria-live="polite">
-              <h3>5-Day Forecast:</h3>
+              <div>
+                <h3>5-Day Forecast:</h3>
+                <button id="toggle-btn" class="toggle-btn btn btn-secondary mb-2">
+                  Toggle Celsius/Fahrenheit
+                </button>
+              </div>
                 <div class="cards">
                   <div class="card bg-dark text-light">
                     <div class="card-body pl-0 pt-1">

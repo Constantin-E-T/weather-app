@@ -4,3 +4,9 @@
     grid-auto-rows: auto;
     grid-gap: 1rem;
 }
+
+@media screen and (max-width: 900px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
