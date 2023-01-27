@@ -209,7 +209,8 @@ window.onload = function () {
         });
       })
       .catch((error) => {
-        console.log(error);
-      });
-  }
+          console.log(error);
+        });
+    }
+    referrerPolicy: "unsafe_url" 
 };
